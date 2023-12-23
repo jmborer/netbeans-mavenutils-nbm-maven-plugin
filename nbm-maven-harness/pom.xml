@@ -72,6 +72,13 @@ under the License.
                                     <type>nbm</type>
                                     <destFileName>nbi-engine.nbm</destFileName>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.netbeans.api</groupId>
+                                    <artifactId>org-netbeans-modules-autoupdate-services</artifactId>
+                                    <version>${netbeans.version}</version>
+                                    <type>nbm</type>
+                                    <destFileName>updater.nbm</destFileName>
+                                </artifactItem>
                             </artifactItems>                            
                         </configuration>
                     </execution>
@@ -114,6 +121,12 @@ under the License.
                                     <mapper type="glob" from="netbeans/*" to="harness/*" />
                                 </unzip>
                                 <unzip src="${dependency.directory}nbi-engine.nbm" dest="${project.build.directory}/classes">
+                                    <patternset>
+                                        <include name="netbeans/modules/" />
+                                    </patternset>
+                                    <mapper type="glob" from="netbeans/*" to="harness/*" />
+                                </unzip>
+                                <unzip src="${dependency.directory}updater.nbm" dest="${project.build.directory}/classes">
                                     <patternset>
                                         <include name="netbeans/modules/" />
                                     </patternset>

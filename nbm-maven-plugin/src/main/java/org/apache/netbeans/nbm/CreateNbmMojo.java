@@ -21,6 +21,7 @@ package org.apache.netbeans.nbm;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +45,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 import org.netbeans.nbbuild.MakeNBM;
 import org.netbeans.nbbuild.MakeNBM.Blurb;
@@ -344,6 +346,18 @@ public class CreateNbmMojo
         }
         //MNBMODULE-217 avoid using the static DATE_FORMAT variable in MavenNBM.java (in ant harness)
         nbmTask.setReleasedate( DATE_FORMAT.format( new Date( System.currentTimeMillis() ) ) );
+        
+        URL url = getClass().getClassLoader().getResource( "harness" );
+        String updaterFile = new File( url.getPath(), "modules/ext/updater.jar" ).getPath().replace( "\\", "/" );
+        Path updaterPath = nbmTask.createUpdaterJar();
+        System.err.println(updaterFile);
+//        updaterPath.setPath("/Users/jeanmarc/code/oss/GitHub/netbeans/nbbuild/netbeans/platform/modules/ext/updater.jar");
+
+        // Find out: 
+        // * why if file: is prefixed, then the path is seen as relative
+        // * jar! in the path doen't get resolved.. so probably a temporary extract is necessary
+        updaterPath.setPath(updaterFile.replace("file:", ""));
+
         try
         {
             nbmTask.execute();
